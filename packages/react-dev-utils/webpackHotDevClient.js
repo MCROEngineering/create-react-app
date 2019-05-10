@@ -58,14 +58,19 @@ if (module.hot && typeof module.hot.dispose === 'function') {
 }
 
 // Connect to WebpackDevServer via a socket.
+var objLocation = Object.assign({
+  protocol: window.location.protocol,
+  hostname: window.location.hostname,
+  port: window.location.port,
+  // Hardcoded in WebpackDevServer
+  pathname: '/sockjs-node',
+}, (window.location.protocol === 'file:' ? {
+  protocol: 'http:',
+  hostname: 'localhost',
+  port: 3000,
+} : {}));
 var connection = new SockJS(
-  url.format({
-    protocol: window.location.protocol,
-    hostname: window.location.hostname,
-    port: window.location.port,
-    // Hardcoded in WebpackDevServer
-    pathname: '/sockjs-node',
-  })
+  url.format(objLocation)
 );
 
 // Unlike WebpackDevServer client, we won't try to reconnect
